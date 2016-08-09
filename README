@@ -16,7 +16,7 @@ ElementKindはElement型の種類を指示するenum型です
 種類は以下の通り
 ・operand(被演算子)
 ・unary_operator(単項演算子)
-・binary_oprator(二項演算子)
+・binary_operator(二項演算子)
 いまのところ単項演算子は前置のみで、後置には未対応
 
 
