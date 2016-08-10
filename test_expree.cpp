@@ -106,7 +106,9 @@ try_read_operand(std::vector<Element>&  ls, const char*&  p)
     {
       auto  subls = scan_expression(++p,')');
 
-      auto  nd = new Node<Element>(make_tree(subls));
+      auto  rpn = to_rpn(std::move(subls));
+
+      auto  nd = create_tree(std::move(rpn));
 
       ls.emplace_back(Operand(nd));
 
@@ -236,13 +238,11 @@ scan(const char*  p)
   printf("ソース: %s\n",p);
 
 
-  auto  ls = scan_expression(p,0);
-
-  auto  ndls = make_node_list(ls);
+  auto  rpn = to_rpn(scan_expression(p,0));
 
   printf("RPN: ");
 
-    for(auto  nd: ndls)
+    for(auto  nd: rpn)
     {
       nd->element.print();
     }
@@ -251,7 +251,7 @@ scan(const char*  p)
   printf("\n");
 
 
-  auto  nd = create_tree(ndls);
+  auto  nd = create_tree(std::move(rpn));
 
   printf("結果: ");
 

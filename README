@@ -1,12 +1,12 @@
 これは式の構文木を生成するための
 テンプレートヘッダーです
+中置記法で並んだ、ユーザー定義のElement型を
+後置記法の並びに変換して、二分木構造にします
 
 
-Element型を定義して
-テンプレートに渡してください
 
 
-Element型の要件は以下の通り
+テンプレートに渡すElement型の要件は以下の通り
 ・ElementKind型への変換ができる
 ・Precedence型への変換ができる
 ・Associativity型への変換ができる
@@ -33,5 +33,18 @@ Associativityは演算子の結合性を指示するenum型です
 left_to_rightなら、((a+b)+c)+d
 right_to_leftなら、a+(b+(c+d))
 となります
+
+
+
+
+使い方：
+中置記法で並んだstd::vector<Element>をto_rpn関数へムーブで渡します
+すると、各Elementをムーブしてnewした、後置記法のstd::list<Node*>となって返ります
+
+さらにそれを、create_tree関数へムーブで渡します
+すると、二分木のルートノードが返ります
+これを使い終えたら、deleteしてください
+
+
 
 
