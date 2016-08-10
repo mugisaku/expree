@@ -247,8 +247,14 @@ clear()
 
 void
 Element::
-print() const
+print(bool  parenthesis) const
 {
+    if(parenthesis)
+    {
+      printf("(");
+    }
+
+
     switch(kind)
     {
       case(ElementKind::operand):
@@ -258,6 +264,12 @@ print() const
       case(ElementKind::binary_operator):
         printf("%s",data.operator_.codes);
         break;
+    }
+
+
+    if(parenthesis)
+    {
+      printf(")");
     }
 }
 

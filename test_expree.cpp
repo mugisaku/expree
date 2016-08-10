@@ -244,7 +244,7 @@ scan(const char*  p)
 
     for(auto  nd: rpn)
     {
-      nd->element.print();
+      nd->element.print(true);
     }
 
 

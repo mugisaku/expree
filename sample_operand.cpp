@@ -343,7 +343,7 @@ print() const
         print_node(data.node);
         break;
       case(OperandKind::integer):
-        printf("(%d)",data.integer);
+        printf("%d",data.integer);
         break;
     }
 }

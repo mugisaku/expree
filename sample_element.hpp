@@ -87,7 +87,7 @@ Element
 
   void  clear();
 
-  void  print() const;
+  void  print(bool  parenthesis=false) const;
 
 };
 
