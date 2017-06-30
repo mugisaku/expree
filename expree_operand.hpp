@@ -13,12 +13,12 @@ OperandKind
   null,
   identifier,
   integer,
-  expression,
+  element,
 
 };
 
 
-struct Node;
+struct Element;
 
 
 union
@@ -28,7 +28,7 @@ OperandData
 
   std::string  identifier;
 
-  Node*  expression;
+  Element*  element;
 
    OperandData(){}
   ~OperandData(){}
@@ -45,8 +45,8 @@ Operand
 public:
   Operand();
   Operand(std::string&&  s);
-  Operand(unsigned int  i);
-  Operand(Node*  expr);
+  Operand(unsigned int   i);
+  Operand(Element*       e);
   Operand(const Operand&   rhs) noexcept;
   Operand(      Operand&&  rhs) noexcept;
  ~Operand();

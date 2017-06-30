@@ -1,6 +1,5 @@
 #include"expree_operand.hpp"
 #include"expree_element.hpp"
-#include"expree_node.hpp"
 #include<cstring>
 #include<string>
 #include<vector>
@@ -12,7 +11,7 @@
 Operand::Operand(                ): kind(OperandKind::null      ){}
 Operand::Operand(std::string&&  s): kind(OperandKind::identifier){new(&data) std::string(std::move(s));}
 Operand::Operand(unsigned int   i): kind(OperandKind::integer   ){new(&data) unsigned int(i);}
-Operand::Operand(Node*       expr): kind(OperandKind::expression){data.expression = expr;}
+Operand::Operand(Element*       e): kind(OperandKind::element   ){data.element = e;}
 
 Operand::Operand(const Operand&  rhs) noexcept:kind(OperandKind::null){*this = rhs;}
 Operand::Operand(     Operand&&  rhs) noexcept:kind(OperandKind::null){*this = std::move(rhs);}
@@ -43,8 +42,8 @@ operator=(const Operand&  rhs) noexcept
       case(OperandKind::integer):
         data.integer = rhs.data.integer;
         break;
-      case(OperandKind::expression):
-        data.expression = new Node(*rhs.data.expression);
+      case(OperandKind::element):
+        data.element = new Element(*rhs.data.element);
         break;
     }
 
@@ -70,8 +69,8 @@ operator=(Operand&&  rhs) noexcept
       case(OperandKind::integer):
         data.integer = rhs.data.integer;
         break;
-      case(OperandKind::expression):
-        data.expression = rhs.data.expression;
+      case(OperandKind::element):
+        data.element = rhs.data.element;
         break;
     }
 
@@ -91,8 +90,8 @@ clear()
         break;
       case(OperandKind::integer):
         break;
-      case(OperandKind::expression):
-        delete data.expression;
+      case(OperandKind::element):
+        delete data.element;
         break;
     }
 
@@ -113,8 +112,15 @@ print() const
       case(OperandKind::integer):
         printf("%u",data.integer);
         break;
-      case(OperandKind::expression):
-        data.expression->print();
+      case(OperandKind::element):
+        auto  l = data.element->get_left();
+        auto  r = data.element->get_right();
+
+          if(l){l->print();}
+
+        data.element->print();
+
+          if(r){r->print();}
         break;
     }
 }

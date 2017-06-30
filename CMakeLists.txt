@@ -47,12 +47,14 @@ endif()
 
 set(SOURCES
   expree_element.cpp
+  expree_element__make_value.cpp
   expree_operand.cpp
-  expree_node.cpp
   expree_scope.cpp
   expree_value.cpp
   expree_integer.cpp
   expree_reference.cpp
+  expree_parser.cpp
+  expree_rearrange.cpp
 )
 
 
