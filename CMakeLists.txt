@@ -54,7 +54,7 @@ set(SOURCES
   expree_integer.cpp
   expree_reference.cpp
   expree_parser.cpp
-  expree_rearrange.cpp
+  expree_parser__make_element.cpp
 )
 
 

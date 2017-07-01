@@ -32,10 +32,7 @@ Parser
 
   BlockMark  block_mark;
 
-  struct Node;
-
-  Node*  first;
-  Node*   last;
+  std::vector<Element>  buffer;
 
   void  skip_spaces();
   void  advance(int  n=1);
@@ -50,16 +47,13 @@ Parser
 
   bool  test_end() const;
 
-  void  push(Node*  nd);
-
   void  start();
 
 public:
   Parser(const std::string&  s);
   Parser(Parser&  parent, BlockMark  blk_mark);
- ~Parser();
 
-  void  print() const;
+  Element  make_element() const;
 
 };
 

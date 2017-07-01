@@ -30,15 +30,33 @@ make_value(Scope&  scope) const
             }
         }
         break;
-      case(ElementKind::unary_operator):
+      case(ElementKind::prefix_unary_operator):
         {
           auto  v = left->make_value(scope);
 
-            switch(data.operator_)
+            switch(*data.operator_)
             {
-              case(Operator('!')): v = Value(!v);break;
-              case(Operator('~')): v = Value(~v);break;
-              case(Operator('-')): v = Value(-v);break;
+              case(*Operator('!')): v = Value(!v);break;
+              case(*Operator('~')): v = Value(~v);break;
+              case(*Operator('-')): v = Value(-v);break;
+              case(*Operator('*')): v = Value(-v);break;
+              case(*Operator('&')): v = Value(-v);break;
+              case(*Operator('+','+')): v = Value(!v);break;
+              case(*Operator('-','-')): v = Value(!v);break;
+            }
+
+
+          return v;
+        }
+        break;
+      case(ElementKind::suffix_unary_operator):
+        {
+          auto  v = left->make_value(scope);
+
+            switch(*data.operator_)
+            {
+              case(*Operator('+','+')): v = Value(!v);break;
+              case(*Operator('-','-')): v = Value(!v);break;
             }
 
 
@@ -50,45 +68,45 @@ make_value(Scope&  scope) const
           auto  lv =  left->make_value(scope);
           auto  rv = right->make_value(scope);
 
-            switch(data.operator_)
+            switch(*data.operator_)
             {
-              case(Operator('*')): lv = Value(lv*rv);break;
-              case(Operator('/')): lv = Value(lv/rv);break;
-              case(Operator('%')): lv = Value(lv%rv);break;
+              case(*Operator('*')): lv = Value(lv*rv);break;
+              case(*Operator('/')): lv = Value(lv/rv);break;
+              case(*Operator('%')): lv = Value(lv%rv);break;
 
-              case(Operator('+')): lv = Value(lv+rv);break;
-              case(Operator('-')): lv = Value(lv-rv);break;
+              case(*Operator('+')): lv = Value(lv+rv);break;
+              case(*Operator('-')): lv = Value(lv-rv);break;
 
-              case(Operator('<','<')): lv = Value(lv<<rv);break;
-              case(Operator('>','>')): lv = Value(lv>>rv);break;
+              case(*Operator('<','<')): lv = Value(lv<<rv);break;
+              case(*Operator('>','>')): lv = Value(lv>>rv);break;
 
-              case(Operator('<')    ): lv = Value(lv< rv);break;
-              case(Operator('<','=')): lv = Value(lv<=rv);break;
-              case(Operator('>')    ): lv = Value(lv> rv);break;
-              case(Operator('>','=')): lv = Value(lv>=rv);break;
+              case(*Operator('<')    ): lv = Value(lv< rv);break;
+              case(*Operator('<','=')): lv = Value(lv<=rv);break;
+              case(*Operator('>')    ): lv = Value(lv> rv);break;
+              case(*Operator('>','=')): lv = Value(lv>=rv);break;
 
-              case(Operator('=','=')): lv = Value(lv==rv);break;
-              case(Operator('!','=')): lv = Value(lv!=rv);break;
+              case(*Operator('=','=')): lv = Value(lv==rv);break;
+              case(*Operator('!','=')): lv = Value(lv!=rv);break;
 
 
-              case(Operator('&')): lv = Value(lv&rv);break;
-              case(Operator('|')): lv = Value(lv|rv);break;
-              case(Operator('^')): lv = Value(lv^rv);break;
+              case(*Operator('&')): lv = Value(lv&rv);break;
+              case(*Operator('|')): lv = Value(lv|rv);break;
+              case(*Operator('^')): lv = Value(lv^rv);break;
 
-              case(Operator('&','&')): lv = Value(lv&&rv);break;
-              case(Operator('|','|')): lv = Value(lv&&rv);break;
+              case(*Operator('&','&')): lv = Value(lv&&rv);break;
+              case(*Operator('|','|')): lv = Value(lv&&rv);break;
 
-              case(Operator('<','<','=')): lv <<= rv;break;
-              case(Operator('>','>','=')): lv >>= rv;break;
-              case(Operator(    '+','=')): lv  += rv;break;
-              case(Operator(    '-','=')): lv  -= rv;break;
-              case(Operator(    '*','=')): lv  *= rv;break;
-              case(Operator(    '/','=')): lv  /= rv;break;
-              case(Operator(    '%','=')): lv  %= rv;break;
-              case(Operator(    '&','=')): lv  &= rv;break;
-              case(Operator(    '|','=')): lv  |= rv;break;
-              case(Operator(    '^','=')): lv  ^= rv;break;
-              case(Operator(        '=')): lv   = rv;break;
+              case(*Operator('<','<','=')): lv <<= rv;break;
+              case(*Operator('>','>','=')): lv >>= rv;break;
+              case(*Operator(    '+','=')): lv  += rv;break;
+              case(*Operator(    '-','=')): lv  -= rv;break;
+              case(*Operator(    '*','=')): lv  *= rv;break;
+              case(*Operator(    '/','=')): lv  /= rv;break;
+              case(*Operator(    '%','=')): lv  %= rv;break;
+              case(*Operator(    '&','=')): lv  &= rv;break;
+              case(*Operator(    '|','=')): lv  |= rv;break;
+              case(*Operator(    '^','=')): lv  ^= rv;break;
+              case(*Operator(        '=')): lv   = rv;break;
             }
 
 

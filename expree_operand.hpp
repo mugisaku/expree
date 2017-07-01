@@ -3,6 +3,7 @@
 
 
 #include<string>
+#include<vector>
 
 
 
@@ -19,6 +20,7 @@ OperandKind
 
 
 struct Element;
+struct Operand;
 
 
 union
@@ -27,6 +29,8 @@ OperandData
   unsigned int  integer;
 
   std::string  identifier;
+
+  std::vector<Operand>  list;
 
   Element*  element;
 

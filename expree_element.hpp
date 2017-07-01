@@ -23,7 +23,8 @@ ElementKind
   null,
   operand,
   operator_,
-  unary_operator,
+  prefix_unary_operator,
+  suffix_unary_operator,
   binary_operator,
 
 };
@@ -52,10 +53,11 @@ Element
 
 public:
   Element();
-  Element(Operand&&  o);
-  Element(const      Operator&  o);
-  Element(const UnaryOperator&  o);
-  Element(const BinaryOperator&  o);
+  Element(Operand&&                   o);
+  Element(const            Operator&  o);
+  Element(const PrefixUnaryOperator&  o);
+  Element(const SuffixUnaryOperator&  o);
+  Element(const BinaryOperator&       o);
   Element(const Element&   rhs) noexcept;
   Element(      Element&&  rhs) noexcept;
   ~Element();

@@ -5,73 +5,12 @@
 
 
 
-struct
-Parser::
-Node
-{
-  BlockMark  block_mark;
-
-  Element*  element=nullptr;
-
-  Node*  first=nullptr;
-  Node*   last=nullptr;
-
-  Node*  previous=nullptr;
-  Node*      next=nullptr;
-
-   Node(Operand&&   o): element(new Element(std::move(o))){}
-   Node(Operator    o): element(new Element(         (o))){}
-   Node(BlockMark  bm, Node*  first_, Node*  last_): block_mark(bm), first(first_), last(last_){}
-  ~Node()
-   {
-     delete element;
-
-     auto  now = first;
-
-       while(now)
-       {
-         auto  next = now->next;
-
-         delete now            ;
-                now = now->next;
-       }
-   }
-
-
-  void  print() const
-  {
-      if(element){element->print();}
-    else
-      {
-        auto  next = first;
-
-        printf("%c",block_mark.begin);
-
-          while(next)
-          {
-            next->print();
-
-            next = next->next;
-          }
-
-
-        printf("%c",block_mark.end);
-      }
-  }
-
-};
-
-
-
-
 Parser::
 Parser(const std::string&  s):
 row_count(0),
 head(s.data()),
 current(s.data()),
-end(s.data()+s.size()),
-first(nullptr),
-last(nullptr)
+end(s.data()+s.size())
 {
   start();
 }
@@ -83,9 +22,7 @@ row_count(parent.row_count),
 head(parent.head),
 current(parent.current),
 end(parent.end),
-block_mark(blk_mark),
-first(nullptr),
-last(nullptr)
+block_mark(blk_mark)
 {
   start();
 
@@ -93,24 +30,7 @@ last(nullptr)
   parent.head      = head;
   parent.current   = current+1;
 
-  parent.push(new Node(block_mark,first,last));
-
-  first = nullptr;
-}
-
-
-Parser::
-~Parser()
-{
-  auto  ptr = first;
-
-    while(ptr)
-    {
-      auto  next = ptr->next;
-
-      delete ptr       ;
-             ptr = next;
-    }
+  parent.buffer.emplace_back(make_element());
 }
 
 
@@ -123,25 +43,6 @@ test_end() const
   auto  c = get_char();
 
   return((current >= end) || (c == block_mark.end));
-}
-
-
-void
-Parser::
-push(Node*  nd)
-{
-    if(!first)
-    {
-      first = nd;
-       last = nd;
-    }
-
-  else
-    {
-      last->next = nd                      ;
-                   nd->previous = last     ;
-                                  last = nd;
-    }
 }
 
 
@@ -214,7 +115,7 @@ read_number()
         {
           current += n;
 
-          push(new Node(Operand(u)));
+          buffer.emplace_back(Operand(u));
 
           return true;
         }
@@ -260,7 +161,7 @@ read_identifier()
         }
 
 
-      push(new Node(Operand(std::move(s))));
+      buffer.emplace_back(Operand(std::move(s)));
 
       return true;
     }
@@ -282,7 +183,7 @@ read_operator(Operator  o)
     {
       current += len;
 
-      push(new Node(o));
+      buffer.emplace_back(o);
 
       return true;
     }
@@ -347,8 +248,12 @@ start()
       else if(read_operator(Operator('&'))){}
       else if(read_operator(Operator('^','='))){}
       else if(read_operator(Operator('^'))){}
+      else if(read_operator(Operator('+','+'))){}
       else if(read_operator(Operator('+','='))){}
       else if(read_operator(Operator('+'))){}
+      else if(read_operator(Operator('-','-'))){}
+      else if(read_operator(Operator('-','>','*'))){}
+      else if(read_operator(Operator('-','>'))){}
       else if(read_operator(Operator('-','='))){}
       else if(read_operator(Operator('-'))){}
       else if(read_operator(Operator('*','='))){}
@@ -357,31 +262,20 @@ start()
       else if(read_operator(Operator('/'))){}
       else if(read_operator(Operator('%','='))){}
       else if(read_operator(Operator('%'))){}
+      else if(read_operator(Operator('.','*'))){}
       else if(read_operator(Operator('.'))){}
+      else if(read_operator(Operator('~'))){}
+      else if(read_operator(Operator(','))){}
       else if(read_block(BlockMark('(',')'))){}
       else if(read_block(BlockMark('[',']'))){}
       else if(read_block(BlockMark('<','>'))){}
+      else if(read_block(BlockMark(':',':'))){}
       else
         {
           printf("不明な要素: %c\n",get_char());
 
           break;
         }
-    }
-}
-
-
-void
-Parser::
-print() const
-{
-  auto  ptr = first;
-
-    while(ptr)
-    {
-      ptr->print();
-
-      ptr = ptr->next;
     }
 }
 

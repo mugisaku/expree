@@ -5,10 +5,11 @@
 
 
 Element::Element(): kind(ElementKind::null), left(nullptr), right(nullptr){}
-Element::Element(Operand&&  o): kind(ElementKind::operand), left(nullptr), right(nullptr){new(&data) Operand(std::move(o));}
-Element::Element(const       Operator&  o): kind(ElementKind::operator_ ){new(&data) Operator(o);}
-Element::Element(const  UnaryOperator&  o): kind(ElementKind::unary_operator ), left(nullptr), right(nullptr){new(&data) Operator(o);}
-Element::Element(const BinaryOperator&  o): kind(ElementKind::binary_operator), left(nullptr), right(nullptr){new(&data) Operator(o);}
+Element::Element(Operand&&                    o): kind(ElementKind::operand), left(nullptr), right(nullptr){new(&data) Operand(std::move(o));}
+Element::Element(const             Operator&  o): kind(ElementKind::operator_ ){new(&data) Operator(o);}
+Element::Element(const  PrefixUnaryOperator&  o): kind(ElementKind::prefix_unary_operator ), left(nullptr), right(nullptr){new(&data) Operator(o);}
+Element::Element(const  SuffixUnaryOperator&  o): kind(ElementKind::suffix_unary_operator ), left(nullptr), right(nullptr){new(&data) Operator(o);}
+Element::Element(const BinaryOperator&        o): kind(ElementKind::binary_operator), left(nullptr), right(nullptr){new(&data) Operator(o);}
 
 Element::Element(const Element&   rhs) noexcept: kind(ElementKind::null), left(nullptr), right(nullptr){*this = rhs;}
 Element::Element(      Element&&  rhs) noexcept: kind(ElementKind::null), left(nullptr), right(nullptr){*this = std::move(rhs);}
@@ -25,7 +26,7 @@ Element::
 
 Element&
 Element::
-operator=(const Element&   rhs) noexcept
+operator=(const Element&  rhs) noexcept
 {
   clear();
 
@@ -124,9 +125,26 @@ print() const
         data.operand.print();
         break;
       case(ElementKind::operator_):
-      case(ElementKind::unary_operator):
+        data.operator_.print();
+        break;
+      case(ElementKind::prefix_unary_operator):
+        printf("(");
+        data.operator_.print();
+        left->print();
+        printf(")");
+        break;
+      case(ElementKind::suffix_unary_operator):
+        printf("(");
+        left->print();
+        data.operator_.print();
+        printf(")");
+        break;
       case(ElementKind::binary_operator):
-        printf("%s",data.operator_.codes);
+        printf("(");
+        left->print();
+        data.operator_.print();
+        right->print();
+        printf(")");
         break;
     }
 }

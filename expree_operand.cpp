@@ -113,6 +113,8 @@ print() const
         printf("%u",data.integer);
         break;
       case(OperandKind::element):
+        printf("(");
+
         auto  l = data.element->get_left();
         auto  r = data.element->get_right();
 
@@ -121,6 +123,8 @@ print() const
         data.element->print();
 
           if(r){r->print();}
+
+        printf(")");
         break;
     }
 }

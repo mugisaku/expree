@@ -3,6 +3,7 @@
 
 
 #include<cstdint>
+#include<cstdio>
 
 
 struct
@@ -11,11 +12,11 @@ Operator
   char  codes[4];
 
 
-  constexpr Operator(char  c0=0, char  c1=0, char  c2=0, char  c3=0):
-  codes{c0,c1,c2,c3}{}
+  constexpr Operator(char  c0=0, char  c1=0, char  c2=0):
+  codes{c0,c1,c2,0}{}
 
 
-  constexpr operator uint32_t() const
+  constexpr uint32_t operator*() const
   {
     return((codes[0]<<24)|
            (codes[1]<<16)|
@@ -23,14 +24,28 @@ Operator
            (codes[3]    ));
   }
 
+  void  print() const
+  {
+    printf("%s",codes);
+  }
+
 };
 
 
 struct
-UnaryOperator: Operator
+PrefixUnaryOperator: Operator
 {
-  constexpr UnaryOperator(char  c0=0, char  c1=0, char  c2=0, char  c3=0):
-  Operator(c0,c1,c2,c3){}
+  constexpr PrefixUnaryOperator(char  c0=0, char  c1=0, char  c2=0):
+  Operator(c0,c1,c2){}
+
+};
+
+
+struct
+SuffixUnaryOperator: Operator
+{
+  constexpr SuffixUnaryOperator(char  c0=0, char  c1=0, char  c2=0):
+  Operator(c0,c1,c2){}
 
 };
 
@@ -38,8 +53,8 @@ UnaryOperator: Operator
 struct
 BinaryOperator: Operator
 {
-  constexpr BinaryOperator(char  c0=0, char  c1=0, char  c2=0, char  c3=0):
-  Operator(c0,c1,c2,c3){}
+  constexpr BinaryOperator(char  c0=0, char  c1=0, char  c2=0):
+  Operator(c0,c1,c2){}
 
 };
 

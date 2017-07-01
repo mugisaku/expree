@@ -3,7 +3,7 @@
 
 
 #include<string>
-#include<vector>
+#include<list>
 #include"expree_value.hpp"
 
 
@@ -27,7 +27,7 @@ Scope
 {
   Scope*  const parent=nullptr;
 
-  std::vector<Object>  object_table;
+  std::list<Object>  object_table;
 
   Scope(Scope*  parent_=nullptr): parent(parent_){}
 
