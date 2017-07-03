@@ -13,7 +13,8 @@ OperandKind
 {
   null,
   identifier,
-  integer,
+  integer_literal,
+  string_literal,
   element,
 
 };
@@ -23,12 +24,23 @@ struct Element;
 struct Operand;
 
 
+struct
+Identifier
+{
+  std::string  string;
+
+  Identifier(                ){}
+  Identifier(std::string&&  s): string(std::move(s)){}
+
+};
+
+
 union
 OperandData
 {
   unsigned int  integer;
 
-  std::string  identifier;
+  std::string  string;
 
   std::vector<Operand>  list;
 
@@ -49,6 +61,7 @@ Operand
 public:
   Operand();
   Operand(std::string&&  s);
+  Operand(Identifier&&  id);
   Operand(unsigned int   i);
   Operand(Element*       e);
   Operand(const Operand&   rhs) noexcept;

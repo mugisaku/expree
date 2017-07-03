@@ -4,8 +4,7 @@
 
 #include"expree_operator.hpp"
 #include"expree_operand.hpp"
-#include"expree_element.hpp"
-#include"expree_value.hpp"
+#include"expree_object.hpp"
 
 
 #ifndef report
@@ -81,7 +80,7 @@ public:
   const Element*  get_left()  const{return  left;}
   const Element*  get_right() const{return right;}
 
-  Value  make_value(Scope&  scope) const;
+  Object  make_value(Scope*  scope=nullptr) const;
 
   void  print() const;
 

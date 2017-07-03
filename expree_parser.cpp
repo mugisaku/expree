@@ -13,6 +13,14 @@ current(s.data()),
 end(s.data()+s.size())
 {
   start();
+
+if(0)
+{
+    for(auto&  e:buffer)
+    {
+      e.print();
+    }
+}
 }
 
 
@@ -139,9 +147,9 @@ read_identifier()
 
     if(isalpha(c) || (c == '_'))
     {
-      std::string  s;
+      Identifier  id;
 
-      s.push_back(c);
+      id.string.push_back(c);
 
       ++current;
 
@@ -157,11 +165,11 @@ read_identifier()
             }
 
 
-          s.push_back(c);
+          id.string.push_back(c);
         }
 
 
-      buffer.emplace_back(Operand(std::move(s)));
+      buffer.emplace_back(Operand(std::move(id)));
 
       return true;
     }

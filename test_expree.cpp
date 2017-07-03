@@ -1,4 +1,5 @@
 #include"expree_parser.hpp"
+#include"expree_scope.hpp"
 #include<cstring>
 #include<cctype>
 #include<vector>
@@ -9,11 +10,24 @@
 int
 main(int  argc, char**  argv)
 {
-  std::string  s(" (2 + 8-- *~5)");
+  std::string  s("x + 32");
 
   Parser  p(s);
 
-  p.make_element().print();
+  auto  e = p.make_element();
+
+
+  MemorySpace  memsp;
+
+  Scope  scope(memsp);
+
+  e.print();
+
+  printf(" == ");
+
+  e.make_value(&scope).print();
+
+  printf("\n");
 
 
   return 0;

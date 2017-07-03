@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 2.8)
 
 
-if(DEFINED SLEEPING_TIME)
+if(DEFINED SLP)
 else()
-  set(SLEEPING_TIME "0")
+  set(SLP "0")
 endif()
 
 
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
-  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "  sleep ${SLEEPING_TIME};  CCACHE_DIR=/tmp/ccachedir ccache")
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "  sleep ${SLP};  CCACHE_DIR=/tmp/ccachedir ccache")
 endif(CCACHE_FOUND)
 
 
@@ -50,9 +50,10 @@ set(SOURCES
   expree_element__make_value.cpp
   expree_operand.cpp
   expree_scope.cpp
-  expree_value.cpp
-  expree_integer.cpp
-  expree_reference.cpp
+  expree_primitive.cpp
+  expree_object.cpp
+  expree_object__operate.cpp
+  expree_MemorySpace.cpp
   expree_parser.cpp
   expree_parser__make_element.cpp
 )

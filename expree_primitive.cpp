@@ -1,0 +1,16 @@
+#include"expree_primitive.hpp"
+#include"expree_MemorySpace.hpp"
+
+
+
+
+Object&
+Pointer::
+dereference(MemorySpace&  space) const
+{
+  return space.get_object(data);
+}
+
+
+
+

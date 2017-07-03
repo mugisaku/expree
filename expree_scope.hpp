@@ -4,36 +4,30 @@
 
 #include<string>
 #include<list>
-#include"expree_value.hpp"
+#include"expree_MemorySpace.hpp"
+#include"expree_primitive.hpp"
+#include"expree_object.hpp"
 
 
-
-
-struct
-Object
-{
-  std::string  name;
-
-  Value  value;
-
-  Object(const std::string&  name_, Value&&  v):
-  name(name_), value(std::move(v)){}
-
-};
 
 
 struct
 Scope
 {
+  MemorySpace&  space;
+
   Scope*  const parent=nullptr;
 
-  std::list<Object>  object_table;
+  std::list<Link>  link_table;
 
-  Scope(Scope*  parent_=nullptr): parent(parent_){}
+  Scope(MemorySpace&   space_): space(space_       ), parent( nullptr){}
+  Scope(Scope&        parent_): space(parent_.space), parent(&parent_){}
 
-  Value&     get_value(const std::string&  name                 );
-  Value*    find_value(const std::string&  name                 );
-  Value*  update_value(const std::string&  name, const Value&  v);
+  Object&   get_object(const std::string&  name);
+  Object*  find_object(const std::string&  name);
+
+  Pointer      get_pointer(const std::string&  name                              ) const;
+  Reference  get_reference(const std::string&  name, bool  new_if_found_not=false)      ;
 
 };
 

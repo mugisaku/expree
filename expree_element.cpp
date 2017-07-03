@@ -121,6 +121,9 @@ print() const
 {
     switch(kind)
     {
+      case(ElementKind::null):
+        printf(" NULL_ELEMENT ");
+        break;
       case(ElementKind::operand):
         data.operand.print();
         break;
@@ -130,20 +133,62 @@ print() const
       case(ElementKind::prefix_unary_operator):
         printf("(");
         data.operator_.print();
-        left->print();
+
+          if(left)
+          {
+            left->print();
+          }
+
+        else
+          {
+            throw Exception("要素がありません");
+          }
+
         printf(")");
         break;
       case(ElementKind::suffix_unary_operator):
         printf("(");
-        left->print();
+
+          if(left)
+          {
+            left->print();
+          }
+
+        else
+          {
+            throw Exception("要素がありません");
+          }
+
+
         data.operator_.print();
         printf(")");
         break;
       case(ElementKind::binary_operator):
         printf("(");
-        left->print();
+
+          if(left)
+          {
+            left->print();
+          }
+
+        else
+          {
+            throw Exception("左の要素がありません");
+          }
+
         data.operator_.print();
-        right->print();
+
+          if(right)
+          {
+            right->print();
+          }
+
+        else
+          {
+            throw Exception("右の要素がありません");
+          }
+
+
         printf(")");
         break;
     }

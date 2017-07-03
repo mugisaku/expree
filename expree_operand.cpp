@@ -8,10 +8,11 @@
 
 
 
-Operand::Operand(                ): kind(OperandKind::null      ){}
-Operand::Operand(std::string&&  s): kind(OperandKind::identifier){new(&data) std::string(std::move(s));}
-Operand::Operand(unsigned int   i): kind(OperandKind::integer   ){new(&data) unsigned int(i);}
-Operand::Operand(Element*       e): kind(OperandKind::element   ){data.element = e;}
+Operand::Operand(                ): kind(OperandKind::null           ){}
+Operand::Operand(std::string&&  s): kind(OperandKind::string_literal ){new(&data) std::string(std::move(s));}
+Operand::Operand(Identifier&&  id): kind(OperandKind::identifier     ){new(&data) std::string(std::move(id.string));}
+Operand::Operand(unsigned int   i): kind(OperandKind::integer_literal){new(&data) unsigned int(i);}
+Operand::Operand(Element*       e): kind(OperandKind::element        ){data.element = e;}
 
 Operand::Operand(const Operand&  rhs) noexcept:kind(OperandKind::null){*this = rhs;}
 Operand::Operand(     Operand&&  rhs) noexcept:kind(OperandKind::null){*this = std::move(rhs);}
@@ -37,9 +38,10 @@ operator=(const Operand&  rhs) noexcept
     switch(kind)
     {
       case(OperandKind::identifier):
-        new(&data.identifier) std::string(rhs.data.identifier);
+      case(OperandKind::string_literal):
+        new(&data.string) std::string(rhs.data.string);
         break;
-      case(OperandKind::integer):
+      case(OperandKind::integer_literal):
         data.integer = rhs.data.integer;
         break;
       case(OperandKind::element):
@@ -63,10 +65,11 @@ operator=(Operand&&  rhs) noexcept
 
     switch(kind)
     {
+      case(OperandKind::string_literal):
       case(OperandKind::identifier):
-        new(&data.identifier) std::string(std::move(rhs.data.identifier));
+        new(&data.string) std::string(std::move(rhs.data.string));
         break;
-      case(OperandKind::integer):
+      case(OperandKind::integer_literal):
         data.integer = rhs.data.integer;
         break;
       case(OperandKind::element):
@@ -86,9 +89,10 @@ clear()
     switch(kind)
     {
       case(OperandKind::identifier):
-        data.identifier.~basic_string();
+      case(OperandKind::string_literal):
+        data.string.~basic_string();
         break;
-      case(OperandKind::integer):
+      case(OperandKind::integer_literal):
         break;
       case(OperandKind::element):
         delete data.element;
@@ -107,24 +111,16 @@ print() const
     switch(kind)
     {
       case(OperandKind::identifier):
-        printf("%s",data.identifier.data());
+        printf(" %s ",data.string.data());
         break;
-      case(OperandKind::integer):
-        printf("%u",data.integer);
+      case(OperandKind::string_literal):
+        printf(" \"%s\" ",data.string.data());
+        break;
+      case(OperandKind::integer_literal):
+        printf(" %u ",data.integer);
         break;
       case(OperandKind::element):
-        printf("(");
-
-        auto  l = data.element->get_left();
-        auto  r = data.element->get_right();
-
-          if(l){l->print();}
-
         data.element->print();
-
-          if(r){r->print();}
-
-        printf(")");
         break;
     }
 }

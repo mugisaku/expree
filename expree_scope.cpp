@@ -3,49 +3,21 @@
 
 
 
-Value*
+Object&
 Scope::
-update_value(const std::string&  name, const Value&  v)
+get_object(const std::string&  name)
 {
-    for(auto&  o: object_table)
-    {
-        if(o.name == name)
-        {
-          o.value = v;
-
-          return &o.value;
-        }
-    }
-
-
-    if(parent)
-    {
-      auto  result = parent->update_value(name,v);
-
-        if(result)
-        {
-          return result;
-        }
-    }
-
-
-  object_table.emplace_back(name,Value(v));
-
-  return &object_table.back().value;
-}
-
-
-Value&
-Scope::
-get_value(const std::string&  name)
-{
-  auto  result = find_value(name);
+  auto  result = find_object(name);
 
     if(!result)
     {
-      object_table.emplace_back(name,Value(Undefined()));
+      auto  ln = space.make_object();
 
-      result = &object_table.back().value;
+      ln.name = name;
+
+      link_table.emplace_back(std::move(ln));
+
+      result = &space.get_object(ln.index);
     }
 
 
@@ -53,21 +25,61 @@ get_value(const std::string&  name)
 }
 
 
-Value*
+Object*
 Scope::
-find_value(const std::string&  name)
+find_object(const std::string&  name)
 {
-    for(auto&  o: object_table)
+    for(auto&  ln: link_table)
     {
-        if(o.name == name)
+        if(ln.name == name)
         {
-          return &o.value;
+          return &space.get_object(ln.index);
         }
     }
 
 
-  return parent? parent->find_value(name):nullptr;
+  return parent? parent->find_object(name):nullptr;
 }
+
+
+Pointer
+Scope::
+get_pointer(const std::string&  name) const
+{
+    for(auto&  ln: link_table)
+    {
+        if(ln.name == name)
+        {
+          return Pointer(ln.index);
+        }
+    }
+
+
+  return parent? parent->get_pointer(name):Pointer();
+}
+
+
+Reference
+Scope::
+get_reference(const std::string&  name, bool  new_if_found_not)
+{
+  auto  ptr = get_pointer(name);
+
+    if(ptr)
+    {
+      return Reference(space,ptr.data);
+    }
+
+  else
+    if(new_if_found_not)
+    {
+    }
+
+
+  throw Exception("参照が見つかりませんでした");
+}
+
+
 
 
 

@@ -1,4 +1,5 @@
 #include"expree_parser.hpp"
+#include"expree_exception.hpp"
 #include<cctype>
 #include<cstring>
 #include<vector>
@@ -124,6 +125,13 @@ OperatorFile
           }
       }
 
+    else
+      {
+        Formatted  f;
+
+        throw Exception(f("%dは無効なエレメント種です",static_cast<int>(k)));
+      }
+
 
     precedence = 16-precedence;
   }
@@ -209,6 +217,7 @@ make_element() const
           else
             if(last_element_kind == ElementKind::prefix_unary_operator)
             {
+              k = ElementKind::prefix_unary_operator;
             }
 
           else
@@ -250,7 +259,7 @@ make_element() const
 
 if(0)
 {
-        for(auto&  e:operator_buffer)
+        for(auto&  e: operator_buffer)
         {
           printf("%s",e.data.codes);
         }
@@ -282,7 +291,7 @@ if(0)
         {
             if(calc.empty())
             {
-              throw 0;
+              throw Exception("単項演算の対象がありません");
             }
 
 
@@ -290,7 +299,7 @@ if(0)
 
           e.insert_to_left(new Element(std::move(operand_e)));
 
-          calc.back() = std::move(e);
+          calc.back() = Element(Operand(new Element(std::move(e))));
         }
 
       else
@@ -298,7 +307,7 @@ if(0)
         {
             if(calc.size() < 2)
             {
-              throw 0;
+              throw Exception("二項演算の対象が足りません");
             }
 
 
@@ -311,19 +320,25 @@ if(0)
           e.insert_to_left( new Element(std::move(l)));
           e.insert_to_right(new Element(std::move(r)));
 
-          calc.back() = std::move(e);
+          calc.back() = Element(Operand(new Element(std::move(e))));
         }
 
       else
         {
-          report;
+          throw Exception("スタックの中身が不正です");
         }
     }
 
 
     if(calc.size() != 1)
     {
-      throw 0;
+        for(auto&  e: calc)
+        {
+          e.print();
+        }
+
+
+      throw Exception("計算結果が不正です");
     }
 
 
