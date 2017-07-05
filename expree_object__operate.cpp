@@ -1,27 +1,28 @@
 #include"expree_object.hpp"
+#include"expree_scope.hpp"
+#include"expree_MemorySpace.hpp"
 
 
+
+
+namespace expree{
 
 
 Integer
 Object::
 to_integer(bool  strong)  const
 {
-    if(is_reference())
-    {
-      return data.reference.access().to_integer(strong);;
-    }
-
+  auto  o = remove_reference(*this);
 
     if(strong)
     {
-           if(is_integer()  ){return data.integer;}
-      else if(is_pointer()  ){return ::to_integer(data.pointer);}
+           if(o.is_integer()){return o->integer;}
+      else if(o.is_pointer()){return expree::to_integer(o->pointer);}
     }
 
   else
     {
-        if(is_integer()){return data.integer;}
+      if(o.is_integer()){return o->integer;}
     }
 
 
@@ -41,7 +42,7 @@ to_pointer(bool  strong)  const
 
     if(strong)
     {
-           if(is_integer()){return ::to_pointer(data.integer);}
+           if(is_integer()){return expree::to_pointer(data.integer);}
       else if(is_pointer()){return data.pointer;}
     }
 
@@ -65,8 +66,8 @@ to_boolean(bool  strong)  const
     }
 
 
-       if(is_integer()){return ::to_boolean(data.integer);}
-  else if(is_pointer()){return ::to_boolean(data.pointer);}
+       if(is_integer()){return expree::to_boolean(data.integer);}
+  else if(is_pointer()){return expree::to_boolean(data.pointer);}
   else if(is_boolean()){return data.boolean;}
 
 
@@ -243,8 +244,66 @@ neg(const Object&  o)
 }
 
 
+Object
+Object::
+ld(Scope&  scope, const Object&  o)
+{
+    if(o.is_pointer())
+    {
+      return Object(Reference(scope.space,o->pointer));
+    }
 
 
+  throw Exception("ポインタでないオブジェクトを、デリファレンスしようとしました");
+}
 
+
+Object
+Object::
+st(const Object&  lhs, const Object&  rhs)
+{
+    if(lhs.is_reference())
+    {
+      auto&  dst = lhs->reference.access();
+
+      dst = remove_reference(rhs);
+
+      return dst;
+    }
+
+
+  throw Exception("参照でないオブジェクトに、代入しようとしました");
+}
+
+
+Object
+Object::
+get_address(Scope&  scope, const Object&  o)
+{
+    if(o.is_reference())
+    {
+      return Object(o->reference.get_pointer());
+    }
+
+
+  throw Exception("参照でないオブジェクトのアドレスを取得しようとしました");
+}
+
+
+Object
+Object::
+remove_reference(const Object&  o)
+{
+    if(o.is_reference())
+    {
+      return o->reference.access();
+    }
+
+
+  return o;
+}
+
+
+}
 
 

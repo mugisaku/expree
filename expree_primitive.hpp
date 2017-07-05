@@ -9,6 +9,9 @@
 #include"expree_exception.hpp"
 
 
+namespace expree{
+
+
 struct Object;
 struct MemorySpace;
 
@@ -127,6 +130,7 @@ constexpr Pointer  to_pointer(const Integer&  v){return Pointer(v.data);}
 constexpr Pointer  to_pointer(const NullPointer&  v){return Pointer();}
 
 
+}
 
 
 #endif

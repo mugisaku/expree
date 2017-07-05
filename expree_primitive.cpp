@@ -4,11 +4,18 @@
 
 
 
+namespace expree{
+
+
 Object&
 Pointer::
 dereference(MemorySpace&  space) const
 {
   return space.get_object(data);
+}
+
+
+
 }
 
 

@@ -4,8 +4,14 @@
 
 #include"expree_primitive.hpp"
 #include"expree_operator.hpp"
-#include"expree_MemorySpace.hpp"
 #include<string>
+
+
+namespace expree{
+
+
+struct MemorySpace;
+struct Scope;
 
 
 enum class
@@ -112,6 +118,13 @@ public:
   static Object  log_or(const Object&  lhs, const Object&  rhs);
   static Object  neg(const Object&  o);
 
+  static Object  ld(Scope&  scope, const Object&  o);
+  static Object  st(const Object&  lhs, const Object&  rhs);
+
+  static Object  get_address(Scope&  scope, const Object&  o);
+
+  static Object  remove_reference(const Object&  o);
+
   void  clear();
 
   void  print() const;
@@ -119,6 +132,7 @@ public:
 };
 
 
+}
 
 
 #endif

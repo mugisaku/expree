@@ -12,6 +12,9 @@
 #endif
 
 
+namespace expree{
+
+
 struct Scope;
 
 
@@ -72,6 +75,8 @@ public:
 
   ElementKind  get_kind() const{return kind;}
 
+  Operand&  as_operand(){return data.operand;}
+
   void  clear();
 
   void  insert_to_left( Element*  e);
@@ -80,13 +85,14 @@ public:
   const Element*  get_left()  const{return  left;}
   const Element*  get_right() const{return right;}
 
-  Object  make_value(Scope*  scope=nullptr) const;
+  Object  make_value(Scope*  scope=nullptr, bool  create_when_found_not=false) const;
 
   void  print() const;
 
 };
 
 
+}
 
 
 #endif

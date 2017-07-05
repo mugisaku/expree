@@ -7,6 +7,9 @@
 
 
 
+namespace expree{
+
+
 namespace{
 
 
@@ -165,17 +168,11 @@ OperatorFile
 
 Element
 Parser::
-make_element() const
+make_element(const char*  opening, const char*  closing) const
 {
     if(buffer.empty())
     {
-      return Element();
-    }
-
-
-    if(buffer.size() == 1)
-    {
-      return Element(buffer.front());
+      throw Exception("要素が一つもありません");
     }
 
 
@@ -183,6 +180,16 @@ make_element() const
   std::vector<OperatorFile>  operator_buffer;
 
   ElementKind  last_element_kind = ElementKind::prefix_unary_operator;
+
+  std::vector<Element>  calc;
+
+    if(buffer.size() == 1)
+    {
+      calc.emplace_back(buffer.front());
+
+      goto FINISH;
+    }
+
 
     for(auto  e: buffer)
     {
@@ -276,8 +283,6 @@ if(0)
     }
 
 
-  std::vector<Element>  calc;
-
     for(auto  e: element_buffer)
     {
         if(e == ElementKind::operand)
@@ -330,6 +335,7 @@ if(0)
     }
 
 
+FINISH:
     if(calc.size() != 1)
     {
         for(auto&  e: calc)
@@ -342,7 +348,21 @@ if(0)
     }
 
 
-  return std::move(calc.back());
+  auto&  result = calc.back();
+
+    if(result != ElementKind::operand)
+    {
+      throw Exception("計算結果がオペランドではありません");
+    }
+
+
+  result.as_operand().set_bracket(opening,closing);
+
+  return std::move(result);
+}
+
+
+
 }
 
 

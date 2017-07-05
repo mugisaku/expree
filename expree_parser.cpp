@@ -5,40 +5,32 @@
 
 
 
+namespace expree{
+
+
 Parser::
-Parser(const std::string&  s):
-row_count(0),
-head(s.data()),
-current(s.data()),
-end(s.data()+s.size())
+Parser(const std::string&  s)
 {
+  reset(s);
+
   start();
-
-if(0)
-{
-    for(auto&  e:buffer)
-    {
-      e.print();
-    }
-}
 }
 
 
 Parser::
-Parser(Parser&  parent, BlockMark  blk_mark):
+Parser(Parser&  parent, const char*  opening, const char*  closing):
 row_count(parent.row_count),
 head(parent.head),
 current(parent.current),
-end(parent.end),
-block_mark(blk_mark)
+end(parent.end)
 {
-  start();
+  start(closing);
 
   parent.row_count = row_count;
   parent.head      = head;
   parent.current   = current+1;
 
-  parent.buffer.emplace_back(make_element());
+  parent.buffer.emplace_back(make_element(opening,closing));
 }
 
 
@@ -48,9 +40,7 @@ bool
 Parser::
 test_end() const
 {
-  auto  c = get_char();
-
-  return((current >= end) || (c == block_mark.end));
+  return(current >= end);
 }
 
 
@@ -203,15 +193,15 @@ read_operator(Operator  o)
 
 bool
 Parser::
-read_block(BlockMark  blk_mark)
+read_block(const char*  opening, const char*  closing)
 {
-  auto  c = get_char();
+  auto  len = strlen(opening);
 
-    if(c == blk_mark.begin)
+    if(std::strncmp(current,opening,len) == 0)
     {
-      ++current;
+      current += len;
 
-      Parser  child(*this,blk_mark);
+      Parser  child(*this,opening,closing);
 
       return true;
     }
@@ -221,14 +211,48 @@ read_block(BlockMark  blk_mark)
 }
 
 
+
+
 void
 Parser::
-start()
+reset(const std::string&  s)
 {
+  row_count = 0;
+  head      = s.data();
+  current   = s.data();
+  end       = (s.data()+s.size());
+
+  buffer.clear();
+}
+
+
+void
+Parser::
+start(const char*  closing)
+{
+  auto  len = closing? std::strlen(closing):0;
+
     for(;;)
     {
       skip_spaces();
 
+        if(closing)
+        {
+            if(std::strncmp(current,closing,len) == 0)
+            {
+              break;
+            }
+
+
+            if(test_end())
+            {
+              Formatted  f;
+
+              throw Exception(f("%sで閉じられていません",closing));
+            }
+        }
+
+      else
         if(test_end())
         {
           break;
@@ -274,10 +298,9 @@ start()
       else if(read_operator(Operator('.'))){}
       else if(read_operator(Operator('~'))){}
       else if(read_operator(Operator(','))){}
-      else if(read_block(BlockMark('(',')'))){}
-      else if(read_block(BlockMark('[',']'))){}
-      else if(read_block(BlockMark('<','>'))){}
-      else if(read_block(BlockMark(':',':'))){}
+      else if(read_block("(",")")){}
+      else if(read_block("[","]")){}
+      else if(read_block("<",">")){}
       else
         {
           printf("不明な要素: %c\n",get_char());
@@ -288,5 +311,6 @@ start()
 }
 
 
+}
 
 

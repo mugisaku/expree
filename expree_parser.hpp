@@ -8,17 +8,7 @@
 #include"expree_element.hpp"
 
 
-struct
-BlockMark
-{
-  int  begin;
-  int    end;
-
-  constexpr BlockMark(int  bg=0, int  ed=0):
-  begin(bg),
-  end(ed){}
-
-};
+namespace expree{
 
 
 class
@@ -29,8 +19,6 @@ Parser
   const char*     head;
   const char*  current;
   const char*      end;
-
-  BlockMark  block_mark;
 
   std::vector<Element>  buffer;
 
@@ -43,19 +31,24 @@ Parser
   bool  read_identifier();
   bool  read_number();
   bool    read_operator(Operator  o);
-  bool    read_block(BlockMark  blk_mark);
+  bool    read_block(const char*  opening, const char*  closing);
 
   bool  test_end() const;
 
-  void  start();
-
 public:
   Parser(const std::string&  s);
-  Parser(Parser&  parent, BlockMark  blk_mark);
+  Parser(Parser&  parent, const char*  opening, const char*  closing);
 
-  Element  make_element() const;
+  void  reset(const std::string&  s);
+
+  void  start(const char*  closing=nullptr);
+
+  Element  make_element(const char*  opening=nullptr, const char*  closing=nullptr) const;
 
 };
+
+
+}
 
 
 #endif

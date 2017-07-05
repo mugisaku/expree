@@ -4,8 +4,12 @@
 
 
 
+namespace expree{
+
+
 MemorySpace::
-MemorySpace()
+MemorySpace():
+global_scope(*this)
 {
   object_table.emplace_back(Object());
 }
@@ -32,6 +36,9 @@ make_object()
   object_table.emplace_back(Object());
 
   return std::move(ln);
+}
+
+
 }
 
 

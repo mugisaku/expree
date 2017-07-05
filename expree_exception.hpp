@@ -7,6 +7,14 @@
 #include<exception>
 
 
+#ifndef report
+#define report  printf("[report in %s] %d %s\n",__FILE__,__LINE__,__func__);
+#endif
+
+
+namespace expree{
+
+
 
 
 class
@@ -51,6 +59,9 @@ public:
   const char*  what() const noexcept override{return buf.data();}
 
 };
+
+
+}
 
 
 #endif

@@ -4,6 +4,11 @@
 
 
 
+namespace expree{
+
+
+
+
 Element::Element(): kind(ElementKind::null), left(nullptr), right(nullptr){}
 Element::Element(Operand&&                    o): kind(ElementKind::operand), left(nullptr), right(nullptr){new(&data) Operand(std::move(o));}
 Element::Element(const             Operator&  o): kind(ElementKind::operator_ ){new(&data) Operator(o);}
@@ -192,6 +197,9 @@ print() const
         printf(")");
         break;
     }
+}
+
+
 }
 
 

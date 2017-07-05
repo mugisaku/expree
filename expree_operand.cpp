@@ -8,11 +8,22 @@
 
 
 
+namespace expree{
+
+
 Operand::Operand(                ): kind(OperandKind::null           ){}
 Operand::Operand(std::string&&  s): kind(OperandKind::string_literal ){new(&data) std::string(std::move(s));}
 Operand::Operand(Identifier&&  id): kind(OperandKind::identifier     ){new(&data) std::string(std::move(id.string));}
 Operand::Operand(unsigned int   i): kind(OperandKind::integer_literal){new(&data) unsigned int(i);}
-Operand::Operand(Element*       e): kind(OperandKind::element        ){data.element = e;}
+
+Operand::Operand(Element*  e, const char*  op_s, const char*  cl_s):
+kind(OperandKind::element),
+opening_string(op_s),
+closing_string(cl_s)
+{
+  data.element = e;
+}
+
 
 Operand::Operand(const Operand&  rhs) noexcept:kind(OperandKind::null){*this = rhs;}
 Operand::Operand(     Operand&&  rhs) noexcept:kind(OperandKind::null){*this = std::move(rhs);}
@@ -34,6 +45,8 @@ operator=(const Operand&  rhs) noexcept
   clear();
 
   kind = rhs.kind;
+  opening_string = rhs.opening_string;
+  closing_string = rhs.closing_string;
 
     switch(kind)
     {
@@ -63,6 +76,9 @@ operator=(Operand&&  rhs) noexcept
   kind = rhs.kind                    ;
          rhs.kind = OperandKind::null;
 
+  opening_string = rhs.opening_string;
+  closing_string = rhs.closing_string;
+
     switch(kind)
     {
       case(OperandKind::string_literal):
@@ -79,6 +95,15 @@ operator=(Operand&&  rhs) noexcept
 
 
   return *this;
+}
+
+
+void
+Operand::
+set_bracket(const char*  op_s, const char*  cl_s)
+{
+  opening_string = op_s;
+  closing_string = cl_s;
 }
 
 
@@ -101,6 +126,9 @@ clear()
 
 
   kind = OperandKind::null;
+
+  opening_string = nullptr;
+  closing_string = nullptr;
 }
 
 
@@ -108,6 +136,12 @@ void
 Operand::
 print() const
 {
+    if(opening_string)
+    {
+      printf("%s",opening_string);
+    }
+
+
     switch(kind)
     {
       case(OperandKind::identifier):
@@ -123,8 +157,15 @@ print() const
         data.element->print();
         break;
     }
+
+
+    if(closing_string)
+    {
+      printf("%s",closing_string);
+    }
 }
 
 
+}
 
 

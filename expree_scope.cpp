@@ -1,6 +1,10 @@
 #include"expree_scope.hpp"
+#include"expree_MemorySpace.hpp"
 
 
+
+
+namespace expree{
 
 
 Object&
@@ -38,6 +42,7 @@ find_object(const std::string&  name)
     }
 
 
+report;
   return parent? parent->find_object(name):nullptr;
 }
 
@@ -61,7 +66,7 @@ get_pointer(const std::string&  name) const
 
 Reference
 Scope::
-get_reference(const std::string&  name, bool  new_if_found_not)
+get_reference(const std::string&  name, bool  create_when_found_not)
 {
   auto  ptr = get_pointer(name);
 
@@ -71,16 +76,50 @@ get_reference(const std::string&  name, bool  new_if_found_not)
     }
 
   else
-    if(new_if_found_not)
+    if(create_when_found_not)
     {
+      auto  ln = space.make_object();
+
+      ln.name = name;
+
+      link_table.emplace_back(std::move(ln));
+
+      return Reference(space,ln.index);
     }
+
 
 
   throw Exception("参照が見つかりませんでした");
 }
 
 
+void
+Scope::
+print() const
+{
+  printf("{");
 
+    for(auto&  ln: link_table)
+    {
+      printf("オブジェクト名:%s, アドレス:0x%04X) = ",ln.name.data(),ln.index);
+
+      space.get_object(ln.index).print();
+
+      printf("\n");
+    }
+
+
+    for(auto&  child: children)
+    {
+      child.print();
+    }
+
+
+  printf("}");
+}
+
+
+}
 
 
 

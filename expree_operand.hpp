@@ -8,6 +8,9 @@
 
 
 
+namespace expree{
+
+
 enum class
 OperandKind
 {
@@ -58,12 +61,15 @@ Operand
   OperandKind  kind;
   OperandData  data;
 
+  const char*  opening_string=nullptr;
+  const char*  closing_string=nullptr;
+
 public:
   Operand();
   Operand(std::string&&  s);
   Operand(Identifier&&  id);
   Operand(unsigned int   i);
-  Operand(Element*       e);
+  Operand(Element*       e, const char*  op_s=nullptr, const char*  cl_s=nullptr);
   Operand(const Operand&   rhs) noexcept;
   Operand(      Operand&&  rhs) noexcept;
  ~Operand();
@@ -79,12 +85,17 @@ public:
 
   OperandKind  get_kind() const{return kind;}
 
+  void  set_bracket(const char*  op_s=nullptr, const char*  cl_s=nullptr);
+
   void  clear();
 
   void  print() const;
 
 
 };
+
+
+}
 
 
 #endif

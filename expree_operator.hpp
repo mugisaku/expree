@@ -6,6 +6,9 @@
 #include<cstdio>
 
 
+namespace expree{
+
+
 struct
 Operator
 {
@@ -57,6 +60,9 @@ BinaryOperator: Operator
   Operator(c0,c1,c2){}
 
 };
+
+
+}
 
 
 #endif

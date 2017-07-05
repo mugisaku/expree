@@ -5,6 +5,9 @@
 
 
 
+namespace expree{
+
+
 Object::Object(): kind(ObjectKind::undefined){}
 Object::Object(const Null&  n): kind(ObjectKind::null){}
 Object::Object(const Void&  v): kind(ObjectKind::void_){}
@@ -43,8 +46,8 @@ operator=(Object&&  rhs) noexcept
 {
   clear();
 
-  kind = rhs.kind                   ;
-         rhs.kind = ObjectKind::null;
+  kind = rhs.kind                        ;
+         rhs.kind = ObjectKind::undefined;
 
   std::memcpy(&data,&rhs.data,sizeof(data));
 }
@@ -54,7 +57,7 @@ void
 Object::
 clear()
 {
-  kind = ObjectKind::null;
+  kind = ObjectKind::undefined;
 }
 
 
@@ -85,11 +88,22 @@ print() const
       data.pointer.print();
       break;
   case(ObjectKind::reference):
+      printf(" REFERENCE ADDRESS(");
+
       data.reference.get_pointer().print();
+
+      printf(") VALUE(");
+
+      data.reference.access().print();
+
+      printf(") ");
       break;
+  default:
+      printf("object print error kind == %d",static_cast<int>(kind));
     }
 }
 
 
+}
 
 
