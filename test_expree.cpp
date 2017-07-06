@@ -12,8 +12,8 @@ using namespace expree;
 int
 main(int  argc, char**  argv)
 {
-  std::string  s("x = ( 32+ 8 )");
-  std::string  s2("x = 32");
+  std::string  s("x = 2");
+  std::string  s2("x* 2");
 
   Parser  p(s);
 

@@ -147,8 +147,6 @@ read_identifier()
         {
           auto  c = get_char();
 
-          ++current;
-
             if(!isalnum(c) && (c != '_'))
             {
               break;
@@ -156,6 +154,8 @@ read_identifier()
 
 
           id.string.push_back(c);
+
+          ++current;
         }
 
 
