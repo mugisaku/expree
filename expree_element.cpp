@@ -49,6 +49,9 @@ operator=(const Element&  rhs) noexcept
     {
       data.operator_ = rhs.data.operator_;
     }
+
+
+  return *this;
 }
 
 
@@ -73,6 +76,9 @@ operator=(Element&&  rhs) noexcept
     {
       data.operator_ = rhs.data.operator_;
     }
+
+
+  return *this;
 }
 
 

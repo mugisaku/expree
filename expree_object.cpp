@@ -37,6 +37,9 @@ operator=(const Object&  rhs) noexcept
   kind = rhs.kind;
 
   std::memcpy(&data,&rhs.data,sizeof(data));
+
+
+  return *this;
 }
 
 
@@ -50,6 +53,9 @@ operator=(Object&&  rhs) noexcept
          rhs.kind = ObjectKind::undefined;
 
   std::memcpy(&data,&rhs.data,sizeof(data));
+
+
+  return *this;
 }
 
 
