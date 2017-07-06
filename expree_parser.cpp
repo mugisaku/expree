@@ -248,7 +248,7 @@ start(const char*  closing)
             {
               Formatted  f;
 
-              throw Exception(f("%sで閉じられていません",closing));
+              throw Exception(f("\"%s\"で閉じられていません",closing));
             }
         }
 

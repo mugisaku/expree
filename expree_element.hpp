@@ -50,8 +50,8 @@ Element
   ElementKind  kind;
   ElementData  data;
 
-  Element*   left;
-  Element*  right;
+  Element*   left=nullptr;
+  Element*  right=nullptr;
 
 public:
   Element();

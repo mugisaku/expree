@@ -9,15 +9,15 @@ namespace expree{
 
 
 
-Element::Element(): kind(ElementKind::null), left(nullptr), right(nullptr){}
-Element::Element(Operand&&                    o): kind(ElementKind::operand), left(nullptr), right(nullptr){new(&data) Operand(std::move(o));}
-Element::Element(const             Operator&  o): kind(ElementKind::operator_ ){new(&data) Operator(o);}
-Element::Element(const  PrefixUnaryOperator&  o): kind(ElementKind::prefix_unary_operator ), left(nullptr), right(nullptr){new(&data) Operator(o);}
-Element::Element(const  SuffixUnaryOperator&  o): kind(ElementKind::suffix_unary_operator ), left(nullptr), right(nullptr){new(&data) Operator(o);}
-Element::Element(const BinaryOperator&        o): kind(ElementKind::binary_operator), left(nullptr), right(nullptr){new(&data) Operator(o);}
+Element::Element(                              ): kind(ElementKind::null                 ){}
+Element::Element(Operand&&                    o): kind(ElementKind::operand              ){new(&data) Operand(std::move(o));}
+Element::Element(const             Operator&  o): kind(ElementKind::operator_            ){new(&data) Operator(o);}
+Element::Element(const  PrefixUnaryOperator&  o): kind(ElementKind::prefix_unary_operator){new(&data) Operator(o);}
+Element::Element(const  SuffixUnaryOperator&  o): kind(ElementKind::suffix_unary_operator){new(&data) Operator(o);}
+Element::Element(const BinaryOperator&        o): kind(ElementKind::binary_operator      ){new(&data) Operator(o);}
 
-Element::Element(const Element&   rhs) noexcept: kind(ElementKind::null), left(nullptr), right(nullptr){*this = rhs;}
-Element::Element(      Element&&  rhs) noexcept: kind(ElementKind::null), left(nullptr), right(nullptr){*this = std::move(rhs);}
+Element::Element(const Element&   rhs) noexcept: kind(ElementKind::null){*this = rhs;}
+Element::Element(      Element&&  rhs) noexcept: kind(ElementKind::null){*this = std::move(rhs);}
 
 
 Element::
