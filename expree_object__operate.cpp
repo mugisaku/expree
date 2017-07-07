@@ -12,7 +12,7 @@ Integer
 Object::
 to_integer(bool  strong)  const
 {
-  auto  o = remove_reference(*this);
+  auto  o = get_entity(*this);
 
     if(strong)
     {
@@ -266,7 +266,7 @@ st(const Object&  lhs, const Object&  rhs)
     {
       auto&  dst = lhs->reference.access();
 
-      dst = remove_reference(rhs);
+      dst = get_entity(rhs);
 
       return dst;
     }
@@ -292,7 +292,7 @@ get_address(Scope&  scope, const Object&  o)
 
 Object
 Object::
-remove_reference(const Object&  o)
+get_entity(const Object&  o)
 {
     if(o.is_reference())
     {

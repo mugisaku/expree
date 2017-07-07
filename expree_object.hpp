@@ -123,7 +123,7 @@ public:
 
   static Object  get_address(Scope&  scope, const Object&  o);
 
-  static Object  remove_reference(const Object&  o);
+  static Object  get_entity(const Object&  o);
 
   void  clear();
 
